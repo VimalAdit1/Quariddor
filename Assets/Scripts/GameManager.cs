@@ -7,6 +7,10 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     Base board;
+
+    [SerializeField]
+    Vector3 Dragoffset;
+
     bool isSelected;
     Camera camera;
     Vector3 originalTransform = Vector3.zero;
@@ -44,7 +48,7 @@ public class GameManager : MonoBehaviour
             Ray ray = camera.ScreenPointToRay(touchPos);
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider.CompareTag("Wall"))
+                if (hit.collider.CompareTag("Interactor"))
                 {
                     dragObject = hit.transform.GetComponent<Wall>();
                     originalTransform = dragObject.transform.position;
@@ -55,11 +59,11 @@ public class GameManager : MonoBehaviour
         }
         if (isDragging && touch.phase == TouchPhase.Moved)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(touch.position);
             if (Physics.Raycast(ray, out RaycastHit hit))
              {
                 pos = hit.point;
-                dragObject.transform.position = new Vector3(pos.x, dragObject.transform.position.y, pos.z);
+                dragObject.transform.position = new Vector3(pos.x, dragObject.transform.position.y, pos.z)+ Dragoffset;
             }
             
         }
@@ -67,6 +71,7 @@ public class GameManager : MonoBehaviour
         {
             isDragging = false;
             dragObject.placeWall(originalTransform);
+            dragObject = null;
         }
     }
 

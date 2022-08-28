@@ -16,12 +16,13 @@ public class Wall : MonoBehaviour
     bool isVisible;
 
     [SerializeField]
-    public bool isHorizontal;
+    public bool isVertical;
 
     public bool isDragging;
-    MeshRenderer renderer;
-    float lastUpdated;
+    public Tile parentTile;
+    public int wallIndex;
 
+    MeshRenderer renderer;
     Wall target;
     void Start()
     {
@@ -31,35 +32,12 @@ public class Wall : MonoBehaviour
         {
             renderer.material = hoverMaterial;
         }
-        lastUpdated = Time.deltaTime;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if(isDragging)
-        {
-            Debug.Log(target.name);
-        }
-       /* if (isVisible & isDragging)
-        {
-            if (Input.touchCount == 2&&lastUpdated-Time.deltaTime > 1)
-            {
-                if (isHorizontal)
-                {
-                    isHorizontal = false;
-                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-                }
-                else
-                {
-                    isHorizontal = true;
-                    transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
-                }
-                lastUpdated = Time.time;
-
-            }
-        }*/
     }
 
     public void placeWall(Vector3 position)
@@ -67,14 +45,16 @@ public class Wall : MonoBehaviour
         if(target!=null)
         {
             target.isVisible = true;
-            target.setMaterial();
+            target.enableWall();
         }
         this.transform.position = position;
     }
 
-    private void setMaterial()
+    private void enableWall()
     {
         renderer.material = normalMaterial;
+        parentTile.updateGraph(isVertical);
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -97,10 +77,10 @@ public class Wall : MonoBehaviour
         {
             if (other.CompareTag("Wall"))
             {
-                Wall wall = other.GetComponent<Wall>();
-                wall.target = this;
-                if (wall.isHorizontal == this.isHorizontal)
+                Wall wall = other.GetComponentInParent<Wall>();
+                if (wall.isVertical == this.isVertical)
                 {
+                    wall.target = this;
                     renderer.enabled = true;
                 }
             }
@@ -112,10 +92,10 @@ public class Wall : MonoBehaviour
         {
             if (other.CompareTag("Wall"))
             {
-                Wall wall = other.GetComponent<Wall>();
-                wall.target = this;
-                if (wall.isHorizontal == this.isHorizontal)
+                Wall wall = other.GetComponentInParent<Wall>();
+                if (wall.isVertical == this.isVertical)
                 {
+                    wall.target = this;
                     renderer.enabled = true;
                 }
             }
@@ -126,8 +106,8 @@ public class Wall : MonoBehaviour
     {
         if (!isVisible)
         {
-            Wall wall = other.GetComponent<Wall>();
-            //wall.target = null;
+            Wall wall = other.GetComponentInParent<Wall>();
+            wall.target = null;
             renderer.enabled = isVisible;
         }
     }

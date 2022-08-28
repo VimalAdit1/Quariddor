@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public int x, y;
+    public int x, y,index;
 
     [SerializeField]
     Material neighbour;
     [SerializeField]
     Material baseColor;
+
+    public int VERTICAL_WALL_INDEX = 3;
+    public int HORIZONTAL_WALL_INDEX = 0;
 
     [SerializeField]
     Transform[] wallAnchors;
@@ -21,7 +24,15 @@ public class Tile : MonoBehaviour
     [SerializeField]
     Wall wallPrefab;
 
+    Wall[] walls;
+
     public bool isValid;
+    public Base board;
+
+    public Tile left;
+    public Tile right;
+    public Tile top;
+    public Tile bottom;
 
     MeshRenderer renderer;
     // Start is called before the first frame update
@@ -29,35 +40,36 @@ public class Tile : MonoBehaviour
     {
         renderer = GetComponent<MeshRenderer>();
         isValid = false;
+        walls = new Wall[2];
         SpawnWalls();
     }
 
     private void SpawnWalls()
     {
         int[] anchors = new int[4];
-        bool isHorizontal=false;
+        bool isVertical=false;
         int i = 0;
         if (y!=0&&x!=8)
         {
-            anchors[i] =3;
+            anchors[i] =VERTICAL_WALL_INDEX;
             i++;
         }
         if (x!=8&&y!=8)
         {
-            anchors[i] = 0;
+            anchors[i] = HORIZONTAL_WALL_INDEX;
             i++;
         }
         for(int j = 0; j <i;j++)
         {
             int anchorIndex = anchors[j];
             Transform anchor = wallAnchors[anchorIndex];
-            if(anchorIndex == 3)
+            if(anchorIndex == VERTICAL_WALL_INDEX)
             {
-                isHorizontal = true;
+                isVertical = true;
             }
             else
             {
-                isHorizontal = false;
+                isVertical = false;
             }
             if (anchor != null)
             {
@@ -65,10 +77,28 @@ public class Tile : MonoBehaviour
                 wall.transform.parent = anchor;
                 wall.transform.localPosition = Vector3.zero + wallOffset;
                 wall.transform.localRotation = Quaternion.EulerAngles(0, 0, 0);
-                wall.isHorizontal = isHorizontal;
+                wall.isVertical = isVertical;
+                wall.parentTile = this;
+                wall.wallIndex = anchorIndex;
+                if(j==VERTICAL_WALL_INDEX)
+                {
+                    walls[0] = wall;
+                }
+                else
+                {
+                    walls[1] = wall;
+                }
             }
         }
         
+    }
+
+    internal void updateGraph(bool isVertical)
+    {
+        if(isVertical)
+        {
+            board.UpdateGraph(isVertical, index);
+        }
     }
 
     // Update is called once per frame
@@ -87,5 +117,17 @@ public class Tile : MonoBehaviour
     {
         renderer.material = baseColor;
         isValid = false;
+    }
+
+    internal void disableWall(bool isVertical)
+    {
+        Debug.Log("Disabling wall " + this.name);
+       foreach(Wall wall in walls)
+        {
+            if(wall.isVertical==isVertical)
+            {
+                wall.gameObject.SetActive(false);
+            }
+        }
     }
 }
