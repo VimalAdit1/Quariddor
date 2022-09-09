@@ -24,7 +24,8 @@ public class Tile : MonoBehaviour
     [SerializeField]
     Wall wallPrefab;
 
-    Wall[] walls;
+    [SerializeField]
+    List<Wall> walls;
 
     public bool isValid;
     public Base board;
@@ -40,7 +41,7 @@ public class Tile : MonoBehaviour
     {
         renderer = GetComponent<MeshRenderer>();
         isValid = false;
-        walls = new Wall[2];
+        walls = new List<Wall>();
         SpawnWalls();
     }
 
@@ -80,25 +81,17 @@ public class Tile : MonoBehaviour
                 wall.isVertical = isVertical;
                 wall.parentTile = this;
                 wall.wallIndex = anchorIndex;
-                if(j==VERTICAL_WALL_INDEX)
-                {
-                    walls[0] = wall;
-                }
-                else
-                {
-                    walls[1] = wall;
-                }
+                walls.Add(wall);
             }
         }
         
     }
 
-    internal void updateGraph(bool isVertical)
+    internal void PlaceWall(bool isVertical)
     {
-        if(isVertical)
-        {
-            board.UpdateGraph(isVertical, index);
-        }
+        
+       board.PlaceWall(isVertical, index);
+        
     }
 
     // Update is called once per frame
@@ -121,12 +114,13 @@ public class Tile : MonoBehaviour
 
     internal void disableWall(bool isVertical)
     {
-        Debug.Log("Disabling wall " + this.name);
+       
        foreach(Wall wall in walls)
         {
-            if(wall.isVertical==isVertical)
+            if(wall != null&&wall.isVertical==isVertical)
             {
                 wall.gameObject.SetActive(false);
+                Debug.Log("Disabling wall " + wall.name);
             }
         }
     }

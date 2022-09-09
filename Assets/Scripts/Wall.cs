@@ -53,7 +53,7 @@ public class Wall : MonoBehaviour
     private void enableWall()
     {
         renderer.material = normalMaterial;
-        parentTile.updateGraph(isVertical);
+        parentTile.PlaceWall(isVertical);
 
     }
 

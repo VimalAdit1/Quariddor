@@ -32,6 +32,14 @@ public class TileGraph
         {
             Debug.Log(neighbour + " not a neighbour of " + tile);
         }
+        if (edgeList.ContainsKey(neighbour))
+        {
+            edgeList[neighbour].Remove(tile);
+        }
+        else
+        {
+            Debug.Log(neighbour + " not a neighbour of " + tile);
+        }
     }
     public List<int> getNeighbours(int tile)
     {

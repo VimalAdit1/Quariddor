@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
                     if (player != null)
                     {
                         board.showNeighbours(player.x, player.y);
-                        player.transform.Translate(Vector3.up * 0.5f);
+                        //player.transform.Translate(Vector3.up * 1f);
                         isSelected = true;
                     }
                 }

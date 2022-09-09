@@ -96,25 +96,76 @@ public class Base : MonoBehaviour
         return (i * width + j);
     }
 
-    internal void UpdateGraph(bool isHorizontal, int index)
+    internal void PlaceWall(bool isVertical, int index)
     {
         Tile tile = tiles[index];
-        if(isHorizontal)
+        RemoveNeighbours(isVertical, index);
+        if(isVertical)
         {
-            if(tile.left!=null)
+            if(tile.top!=null)
             {
-                tile.left.disableWall(isHorizontal);
-                tile.left.disableWall(!isHorizontal);
+                tile.top.disableWall(isVertical);
+
+            }
+            if (tile.bottom != null)
+            {
+                tile.bottom.disableWall(isVertical);
             }
             if (tile.right != null)
             {
-                tile.right.disableWall(isHorizontal);
+                tile.right.disableWall(!isVertical);          
+            }
+
+            // Remove top right
+        }
+        else
+        {
+            if (tile.right != null)
+            {
+                tile.right.disableWall(isVertical);
+            }
+            if (tile.left != null)
+            {
+                tile.left.disableWall(isVertical);
+                tile.left.disableWall(!isVertical);
+            }
+
+            //Remove left's top
+        }
+    }
+
+    internal void RemoveNeighbours(bool isVertical,int index)
+    {
+        Tile tile = tiles[index];
+        if (isVertical)
+        {
+            if (tile.top != null)
+            {
+                Tile top = tile.top;
+                if (top.right != null)
+                {
+                    tileGraph.removeEdge(top.index, top.right.index);
+                }
+            }
+            if(tile.right != null)
+            {
+                tileGraph.removeEdge(index, tile.right.index);
             }
         }
         else
         {
-             //Bottom and top tiles veertical
-             //Right and top rights horizontal
+            if (tile.left != null)
+            {
+                Tile left = tile.left;
+                if (left.top != null)
+                {
+                    tileGraph.removeEdge(left.index, left.top.index);
+                }
+            }
+            if (tile.top != null)
+            {
+                tileGraph.removeEdge(index, tile.top.index);
+            }
         }
     }
 
