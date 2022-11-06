@@ -95,7 +95,7 @@ public class Base : MonoBehaviour
     {
         return (i * width + j);
     }
-
+    
     internal void PlaceWall(bool isVertical, int index)
     {
         Tile tile = tiles[index];
@@ -180,6 +180,7 @@ public class Base : MonoBehaviour
     internal void showNeighbours(int x, int y)
     {
         resetMaterials();
+        pathExists(x, y);
         int index = GetTileIdFromCoordinates(x, y);
         List<int> neighbours = tileGraph.getNeighbours(index);
         foreach(int neighbour in neighbours)
@@ -203,5 +204,80 @@ public class Base : MonoBehaviour
     {
         
     }
-    
+
+    bool pathExists(int x, int y)
+    {
+        int index = GetTileIdFromCoordinates(x, y);
+        foreach (Tile tile in tiles)
+        {
+            if (tile.index != index)
+            {
+                tile.g = int.MaxValue;
+            }
+            else
+            {
+                tile.g = 0;
+            }    
+            tile.h = width - tile.y;
+            tile.previosTile = null;
+            tile.CalculateFCost();
+        }
+        
+        List<int> searched = new List<int>();
+        List<int> toSearch = new List<int>();
+        toSearch.Add(index);
+        while (toSearch.Count > 0)
+        {
+            int currentIndex = getOptimalTile(toSearch);
+            searched.Add(currentIndex);
+            toSearch.Remove(currentIndex);
+            Tile currentTile = tiles[currentIndex];
+            if (currentTile.h <= 0)
+            {
+                ColorPath(currentTile);
+                return true;
+            }
+            else if (!searched.Contains(currentIndex))
+            {
+                List<int> neighbours = tileGraph.getNeighbours(currentIndex);
+                foreach(int neighbour in neighbours)
+                {
+                    Tile neighbourTile = tiles[neighbour];
+                    neighbourTile.g = currentTile.g + 1;
+                    neighbourTile.previosTile = currentTile;
+                    neighbourTile.CalculateFCost();
+                    if(!searched.Contains(neighbour)&&!toSearch.Contains(neighbour))
+                    {
+                        toSearch.Add(neighbour);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void ColorPath(Tile tile)
+    {
+        while (tile != null)
+        {
+            tile.Select();
+            tile = tile.previosTile; 
+        }
+    }
+
+    public int getOptimalTile(List<int> toSearch)
+    {
+        int minF = int.MaxValue;
+        int minIndex = 0;
+        foreach(int tile in toSearch)
+        {
+            if(tiles[tile].f<minF)
+            {
+                minIndex = tile;
+                minF = tiles[tile].f;
+            }
+        }
+        return minIndex;
+    }
+
 }

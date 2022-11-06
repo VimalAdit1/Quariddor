@@ -34,6 +34,13 @@ public class Tile : MonoBehaviour
     public Tile right;
     public Tile top;
     public Tile bottom;
+    
+
+    //A* varaibles
+    public int f;
+    public int g;
+    public int h;
+    public Tile previosTile;
 
     MeshRenderer renderer;
     // Start is called before the first frame update
@@ -123,5 +130,10 @@ public class Tile : MonoBehaviour
                 Debug.Log("Disabling wall " + wall.name);
             }
         }
+    }
+
+    public void CalculateFCost()
+    {
+        f = g + h;
     }
 }
