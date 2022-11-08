@@ -218,22 +218,25 @@ public class Base : MonoBehaviour
             {
                 tile.g = 0;
             }    
-            tile.h = width - tile.y;
+            tile.h = width-1 - tile.x;
             tile.previosTile = null;
             tile.CalculateFCost();
         }
+        Debug.Log("Initialized");
         
         List<int> searched = new List<int>();
         List<int> toSearch = new List<int>();
         toSearch.Add(index);
+        Tile previousTile = null;
         while (toSearch.Count > 0)
         {
             int currentIndex = getOptimalTile(toSearch);
-            searched.Add(currentIndex);
+            Debug.Log("Searching Node"+ currentIndex);
             toSearch.Remove(currentIndex);
             Tile currentTile = tiles[currentIndex];
             if (currentTile.h <= 0)
             {
+                currentTile.previosTile = previousTile;
                 ColorPath(currentTile);
                 return true;
             }
@@ -244,14 +247,18 @@ public class Base : MonoBehaviour
                 {
                     Tile neighbourTile = tiles[neighbour];
                     neighbourTile.g = currentTile.g + 1;
-                    neighbourTile.previosTile = currentTile;
+                    //neighbourTile.previosTile = currentTile;
                     neighbourTile.CalculateFCost();
                     if(!searched.Contains(neighbour)&&!toSearch.Contains(neighbour))
                     {
                         toSearch.Add(neighbour);
                     }
                 }
+            searched.Add(currentIndex);
+             currentTile.previosTile = previousTile;
+             previousTile = currentTile;
             }
+            
         }
         return false;
     }
@@ -277,6 +284,7 @@ public class Base : MonoBehaviour
                 minF = tiles[tile].f;
             }
         }
+        Debug.Log("Optimal Tile"+minIndex);
         return minIndex;
     }
 
