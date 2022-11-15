@@ -56,38 +56,18 @@ public class Wall : MonoBehaviour
         parentTile.PlaceWall(isVertical);
 
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-       /*if(collision.collider.CompareTag("Wall"))
-        {
-            target = collision.collider.GetComponent<Wall>();
-        }*/
-
-    }
-    private void OnCollisionExit(Collision collision)
-    {
-       
-
-    }
-
     private void OnTriggerEnter(Collider other)
     {
-        if (!isVisible)
-        {
-            if (other.CompareTag("Wall"))
-            {
-                Wall wall = other.GetComponentInParent<Wall>();
-                if (wall.isVertical == this.isVertical)
-                {
-                    wall.target = this;
-                    renderer.enabled = true;
-                }
-            }
-        }
+        CheckPaathExistsAndRenderWall(other);
     }
     private void OnTriggerStay(Collider other)
     {
+        CheckPaathExistsAndRenderWall(other);
+        
+    }
+
+    private void CheckPaathExistsAndRenderWall(Collider other)
+    {
         if (!isVisible)
         {
             if (other.CompareTag("Wall"))
@@ -95,8 +75,15 @@ public class Wall : MonoBehaviour
                 Wall wall = other.GetComponentInParent<Wall>();
                 if (wall.isVertical == this.isVertical)
                 {
-                    wall.target = this;
-                    renderer.enabled = true;
+                    Base board = this.parentTile.getBoard();
+                    TileGraph tileGraphCopy= board.getTileGraph();
+                    tileGraphCopy=board.RemoveNeighbours(this.isVertical, this.parentTile.index, tileGraphCopy);
+                    Player player = board.getPlayer();
+                    if (board.pathExists(player.x, player.y, tileGraphCopy))
+                    {
+                        wall.target = this;
+                        renderer.enabled = true;
+                    }
                 }
             }
         }

@@ -52,6 +52,10 @@ public class Tile : MonoBehaviour
         SpawnWalls();
     }
 
+    public Base getBoard()
+    {
+        return board;
+    }
     private void SpawnWalls()
     {
         int[] anchors = new int[4];

@@ -35,6 +35,14 @@ public class Base : MonoBehaviour
         player.y = width / 2;
     }
 
+    public TileGraph getTileGraph()
+    {
+        return tileGraph;
+    }
+    public Player getPlayer()
+    {
+        return player;
+    }
     private void GenerateBoard()
     {
         int index = 0;
@@ -99,7 +107,7 @@ public class Base : MonoBehaviour
     internal void PlaceWall(bool isVertical, int index)
     {
         Tile tile = tiles[index];
-        RemoveNeighbours(isVertical, index);
+        tileGraph=RemoveNeighbours(isVertical, index,tileGraph);
         if(isVertical)
         {
             if(tile.top!=null)
@@ -134,7 +142,7 @@ public class Base : MonoBehaviour
         }
     }
 
-    internal void RemoveNeighbours(bool isVertical,int index)
+    internal TileGraph RemoveNeighbours(bool isVertical,int index, TileGraph tileGraphCopy)
     {
         Tile tile = tiles[index];
         if (isVertical)
@@ -144,12 +152,12 @@ public class Base : MonoBehaviour
                 Tile top = tile.top;
                 if (top.right != null)
                 {
-                    tileGraph.removeEdge(top.index, top.right.index);
+                    tileGraphCopy.removeEdge(top.index, top.right.index);
                 }
             }
             if(tile.right != null)
             {
-                tileGraph.removeEdge(index, tile.right.index);
+                tileGraphCopy.removeEdge(index, tile.right.index);
             }
         }
         else
@@ -159,14 +167,15 @@ public class Base : MonoBehaviour
                 Tile left = tile.left;
                 if (left.top != null)
                 {
-                    tileGraph.removeEdge(left.index, left.top.index);
+                    tileGraphCopy.removeEdge(left.index, left.top.index);
                 }
             }
             if (tile.top != null)
             {
-                tileGraph.removeEdge(index, tile.top.index);
+                tileGraphCopy.removeEdge(index, tile.top.index);
             }
         }
+        return tileGraphCopy;
     }
 
     internal void MovePlayer(int x, int y)
@@ -180,7 +189,7 @@ public class Base : MonoBehaviour
     internal void showNeighbours(int x, int y)
     {
         resetMaterials();
-        pathExists(x, y);
+        //pathExists(x, y);
         int index = GetTileIdFromCoordinates(x, y);
         List<int> neighbours = tileGraph.getNeighbours(index);
         foreach(int neighbour in neighbours)
@@ -205,7 +214,7 @@ public class Base : MonoBehaviour
         
     }
 
-    bool pathExists(int x, int y)
+    public bool pathExists(int x, int y,TileGraph graph)
     {
         int index = GetTileIdFromCoordinates(x, y);
         foreach (Tile tile in tiles)
@@ -242,7 +251,7 @@ public class Base : MonoBehaviour
             }
             else if (!searched.Contains(currentIndex))
             {
-                List<int> neighbours = tileGraph.getNeighbours(currentIndex);
+                List<int> neighbours = graph.getNeighbours(currentIndex);
                 foreach(int neighbour in neighbours)
                 {
                     Tile neighbourTile = tiles[neighbour];
