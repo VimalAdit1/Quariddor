@@ -142,7 +142,7 @@ public class Base : MonoBehaviour
         }
     }
 
-    internal TileGraph RemoveNeighbours(bool isVertical,int index, TileGraph tileGraphCopy)
+    internal TileGraph RemoveNeighbours(bool isVertical,int index, TileGraph graph)
     {
         Tile tile = tiles[index];
         if (isVertical)
@@ -152,12 +152,12 @@ public class Base : MonoBehaviour
                 Tile top = tile.top;
                 if (top.right != null)
                 {
-                    tileGraphCopy.removeEdge(top.index, top.right.index);
+                    graph.removeEdge(top.index, top.right.index);
                 }
             }
             if(tile.right != null)
             {
-                tileGraphCopy.removeEdge(index, tile.right.index);
+                graph.removeEdge(index, tile.right.index);
             }
         }
         else
@@ -167,15 +167,15 @@ public class Base : MonoBehaviour
                 Tile left = tile.left;
                 if (left.top != null)
                 {
-                    tileGraphCopy.removeEdge(left.index, left.top.index);
+                    graph.removeEdge(left.index, left.top.index);
                 }
             }
             if (tile.top != null)
             {
-                tileGraphCopy.removeEdge(index, tile.top.index);
+                graph.removeEdge(index, tile.top.index);
             }
         }
-        return tileGraphCopy;
+        return graph;
     }
 
     internal void MovePlayer(int x, int y)
@@ -189,7 +189,6 @@ public class Base : MonoBehaviour
     internal void showNeighbours(int x, int y)
     {
         resetMaterials();
-        //pathExists(x, y);
         int index = GetTileIdFromCoordinates(x, y);
         List<int> neighbours = tileGraph.getNeighbours(index);
         foreach(int neighbour in neighbours)
@@ -211,7 +210,6 @@ public class Base : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public bool pathExists(int x, int y,TileGraph graph)
@@ -231,8 +229,6 @@ public class Base : MonoBehaviour
             tile.previosTile = null;
             tile.CalculateFCost();
         }
-        Debug.Log("Initialized");
-        
         List<int> searched = new List<int>();
         List<int> toSearch = new List<int>();
         toSearch.Add(index);
@@ -240,13 +236,13 @@ public class Base : MonoBehaviour
         while (toSearch.Count > 0)
         {
             int currentIndex = getOptimalTile(toSearch);
-            Debug.Log("Searching Node"+ currentIndex);
             toSearch.Remove(currentIndex);
             Tile currentTile = tiles[currentIndex];
+            currentTile.Select();
             if (currentTile.h <= 0)
             {
                 currentTile.previosTile = previousTile;
-                ColorPath(currentTile);
+                //ColorPath(currentTile);
                 return true;
             }
             else if (!searched.Contains(currentIndex))
@@ -293,7 +289,6 @@ public class Base : MonoBehaviour
                 minF = tiles[tile].f;
             }
         }
-        Debug.Log("Optimal Tile"+minIndex);
         return minIndex;
     }
 

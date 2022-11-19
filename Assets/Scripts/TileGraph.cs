@@ -11,6 +11,19 @@ public class TileGraph
         edgeList = new Dictionary<int, List<int>>();
     }
 
+    public Dictionary<int, List<int>> getEdgeList()
+    {
+        return edgeList;
+    }
+
+    public TileGraph(Dictionary<int, List<int>> edgeList)
+    {
+        this.edgeList = new Dictionary<int, List<int>>();
+        foreach(int key in edgeList.Keys)
+        {
+            this.edgeList.Add(key, new List<int>(edgeList[key]));
+        }
+    }
     public void addEdge(int tile, int neighbour)
     {
         if (edgeList.ContainsKey(tile))

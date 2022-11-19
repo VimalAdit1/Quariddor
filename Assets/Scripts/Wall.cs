@@ -67,7 +67,7 @@ public class Wall : MonoBehaviour
     }
 
     private void CheckPaathExistsAndRenderWall(Collider other)
-    {
+    { 
         if (!isVisible)
         {
             if (other.CompareTag("Wall"))
@@ -76,8 +76,12 @@ public class Wall : MonoBehaviour
                 if (wall.isVertical == this.isVertical)
                 {
                     Base board = this.parentTile.getBoard();
-                    TileGraph tileGraphCopy= board.getTileGraph();
+                    TileGraph tileGraphCopy = new TileGraph(board.getTileGraph().getEdgeList());
                     tileGraphCopy=board.RemoveNeighbours(this.isVertical, this.parentTile.index, tileGraphCopy);
+                    if(tileGraphCopy==board.getTileGraph())
+                        {
+                        Debug.Log("Equal object");
+                    }
                     Player player = board.getPlayer();
                     if (board.pathExists(player.x, player.y, tileGraphCopy))
                     {
