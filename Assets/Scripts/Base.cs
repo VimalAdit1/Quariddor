@@ -194,6 +194,7 @@ public class Base : MonoBehaviour
         foreach(int neighbour in neighbours)
         {
             tiles[neighbour].Select();
+            //tiles[neighbour].transform.Translate(Vector3.up * 1f);
         }
     }
 
@@ -202,6 +203,7 @@ public class Base : MonoBehaviour
         foreach (Tile tile in tiles)
         {
             tile.Reset();
+            //tile.transform.position = tile.originalTransform;
         }
     }
 
@@ -238,7 +240,7 @@ public class Base : MonoBehaviour
             int currentIndex = getOptimalTile(toSearch);
             toSearch.Remove(currentIndex);
             Tile currentTile = tiles[currentIndex];
-            currentTile.Select();
+            //currentTile.Select();
             if (currentTile.h <= 0)
             {
                 currentTile.previosTile = previousTile;

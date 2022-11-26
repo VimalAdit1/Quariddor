@@ -7,6 +7,8 @@ public class Tile : MonoBehaviour
 {
     public int x, y,index;
 
+    public Vector3 originalTransform;
+
     [SerializeField]
     Material neighbour;
     [SerializeField]
@@ -50,6 +52,7 @@ public class Tile : MonoBehaviour
         isValid = false;
         walls = new List<Wall>();
         SpawnWalls();
+        originalTransform = this.transform.position;
     }
 
     public Base getBoard()

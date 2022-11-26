@@ -175,8 +175,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   y: 0
+  index: 0
+  originalTransform: {x: 0, y: 0, z: 0}
   neighbour: {fileID: 2100000, guid: 2092da10c6ba9714786b776d95911975, type: 2}
   baseColor: {fileID: 2100000, guid: 417daaf0b00c8de418c86ad4227390b6, type: 2}
+  VERTICAL_WALL_INDEX: 3
+  HORIZONTAL_WALL_INDEX: 0
   wallAnchors:
   - {fileID: 8082418571137377970}
   - {fileID: 5383132928934841224}
@@ -185,7 +189,17 @@ MonoBehaviour:
   wallOffset: {x: 0.09, y: 0.8, z: 0.75}
   wallPrefab: {fileID: -8953041055182618192, guid: 416ddb608385b1e4fb58d9c12aa86045,
     type: 3}
+  walls: []
   isValid: 0
+  board: {fileID: 0}
+  left: {fileID: 0}
+  right: {fileID: 0}
+  top: {fileID: 0}
+  bottom: {fileID: 0}
+  f: 0
+  g: 0
+  h: 0
+  previosTile: {fileID: 0}
 --- !u!1 &6905716297805943046
 GameObject:
   m_ObjectHideFlags: 0
