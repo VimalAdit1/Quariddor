@@ -8,13 +8,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Base board;
 
-    [SerializeField]
-    Vector3 Dragoffset;
+    public Vector3 Dragoffset;
 
     bool isSelected;
     Camera camera;
     Vector3 originalTransform = Vector3.zero;
-    bool isDragging;
+    public bool isDragging;
     Wall dragObject;
     // Start is called before the first frame update
     void Start()

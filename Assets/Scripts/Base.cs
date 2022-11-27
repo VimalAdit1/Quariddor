@@ -20,6 +20,16 @@ public class Base : MonoBehaviour
     [SerializeField]
     private int width, height;
     // Start is called before the first frame update
+
+    public TileGraph getTileGraph()
+    {
+        return tileGraph;
+    }
+    public Player getPlayer()
+    {
+        return player;
+    }
+
     void Start()
     {
         tiles = new Tile[width* height];
@@ -35,14 +45,6 @@ public class Base : MonoBehaviour
         player.y = width / 2;
     }
 
-    public TileGraph getTileGraph()
-    {
-        return tileGraph;
-    }
-    public Player getPlayer()
-    {
-        return player;
-    }
     private void GenerateBoard()
     {
         int index = 0;
@@ -213,6 +215,9 @@ public class Base : MonoBehaviour
     void Update()
     {
     }
+
+
+    //Path finding Code
 
     public bool pathExists(int x, int y,TileGraph graph)
     {
