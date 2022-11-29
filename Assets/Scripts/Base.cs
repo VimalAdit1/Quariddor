@@ -13,7 +13,7 @@ public class Base : MonoBehaviour
 
     Tile[] tiles;
 
-    Player player;
+    Player player,player2;
 
     TileGraph tileGraph;
 
@@ -35,14 +35,24 @@ public class Base : MonoBehaviour
         tiles = new Tile[width* height];
         tileGraph = new TileGraph();
         GenerateBoard();
-        SpawnPlayer();
+        SpawnPlayers();
     }
 
-    private void SpawnPlayer()
+    private void SpawnPlayers()
     {
+        
         player = GameObject.Instantiate(playerPrefab, new Vector3(0, this.playerPrefab.yOffset, (width / 2)), Quaternion.identity);
         player.x = 0;
         player.y = width / 2;
+        player.setPlayerId(0);
+        player.setBase(this);
+
+        player2 = GameObject.Instantiate(playerPrefab, new Vector3(height-1, this.playerPrefab.yOffset, (width / 2)), Quaternion.identity);
+        player2.x = height-1;
+        player2.y = width / 2;
+        player2.setPlayerId(1);
+        player2.setBase(this);
+
     }
 
     private void GenerateBoard()
@@ -182,7 +192,7 @@ public class Base : MonoBehaviour
 
     internal void MovePlayer(int x, int y)
     {
-        player.transform.position = new Vector3(x,player.yOffset,y);
+        player.transform.position = new Vector3(x,player.yOffset, y);
         player.x = x;
         player.y = y;
         resetMaterials();
@@ -200,7 +210,7 @@ public class Base : MonoBehaviour
         }
     }
 
-    private void resetMaterials()
+    public void resetMaterials()
     {
         foreach (Tile tile in tiles)
         {

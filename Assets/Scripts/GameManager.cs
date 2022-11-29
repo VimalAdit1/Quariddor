@@ -15,18 +15,25 @@ public class GameManager : MonoBehaviour
     Vector3 originalTransform = Vector3.zero;
     public bool isDragging;
     Wall dragObject;
+
+    TurnManager turnManager;
     // Start is called before the first frame update
     void Start()
     {
         camera = FindObjectOfType<Camera>();
+        turnManager = GetComponent<TurnManager>();
         isSelected = false;
     }
 
+    public bool isPlayerActive(int id)
+    {
+        return (turnManager.currentTurn%2)==id;
+    }
     // Update is called once per frame
     void Update()
     {
-        CheckDragInput();
-        CheckPlayerMovements();
+        //CheckDragInput();
+        //CheckPlayerMovements();
     }
 
     private void CheckDragInput()
@@ -112,5 +119,10 @@ public class GameManager : MonoBehaviour
 
             }
         }
+    }
+
+    public void TurnMade()
+    {
+        turnManager.TurnMade();
     }
 }

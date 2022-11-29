@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
+    public int currentTurn = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +16,10 @@ public class TurnManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void TurnMade()
+    {
+        currentTurn++;
     }
 }

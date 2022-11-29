@@ -112,5 +112,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   yOffset: 0.63
+  materails:
+  - {fileID: 2100000, guid: 2d7f0f30f09d47a43bd6504d4deb927d, type: 2}
+  - {fileID: 2100000, guid: 511bb63e581363e48af5e7063926d724, type: 2}
   x: 0
   y: 0
